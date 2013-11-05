@@ -1,0 +1,151 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>JSON Templates Talk</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script src='javascripts/jquery.js'></script>
+    <script src="javascripts/app.js"></script>
+  </head>
+  <body>
+    <div id='timer'>0</div>
+    <section class='active'>
+      <h2>JSON Templates</h2>
+    </section>
+
+    <section>
+      <h2>JSON?</h2>
+      <ul>
+        <li>JavaScript Object Notation</li>
+        <li>A datastructure for talking between servers/clients/other servers</li>
+        <li>Key value pairs</li>
+        <li>Universal, straightforward, human readable.</li>
+      </ul>
+
+      <pre>
+<blockquote>{
+  "key1": "value1",
+  "key2": 2,
+  "key3": {
+    "key3a": "nested"
+  }
+}
+</blockquote>
+      </pre>
+    </section>
+    
+    <section>
+      <h2>JSON Template?</h2>
+      <ul>
+        <li>Build a sensible format for handling JSON</li>
+        <li>Is treated a bit like a view</li>
+        <li>Gives a handy DSL</li>
+        <li>Only exposes the data you want</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>RABL</h2>
+      <ul>
+        <li>Ruby API Builder Language</li>
+        <li>gem 'rabl'</li>
+        <li>Sinatra/Padrino : Rabl.register!</li>
+        <li>Just call render from controller</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>RABL Template</h2>
+      <pre>
+<blockquote># app/views/posts/index.rabl
+collection @posts
+attributes :id, :title, :subject
+child(:user) { attributes :full_name }
+node(:read) { |post| post.read_by?(@user) }
+</blockquote>
+      </pre>
+    </section>
+
+    <section>
+      <h2>Naming</h2>
+      <pre>
+<blockquote>
+object @user => :person
+# => { "person" : { ... } }
+collection @users => :people
+# => { "people" : [ { "person" : { ... } } ] }
+collection @users, root: "people", object_root: "user"
+# => { "people" : [ { "user" : { ... } } ] }
+</blockquote>
+      </pre>
+    </section>
+
+    <section>
+      <h2>Attributes/Blocks</h2>
+      <pre>
+<blockquote>
+attributes :bar => :baz, :dog => :animal
+# => # { baz : <bar value>, animal : <dog value> }
+
+node :full_name do |u|
+  u.first_name + " " + u.last_name
+end
+</blockquote>
+      </pre>
+    </section>
+
+    <section>
+      <h2>Partials</h2>
+      <pre>
+<blockquote>
+node :location do
+  { :city => @city, 
+  :address => partial("users/address", :object => @address) }
+end
+</blockquote>
+      </pre>
+    </section>
+
+    <section>
+      <h2>Deep Nesting</h2>
+      <pre>
+<blockquote>
+# app/views/quizzes/show.json.rabl
+object @quiz
+attribute :title
+child :questions do
+  attribute :caption
+  child :answers do
+    # Use inheritance to reduce duplication
+    extends "answers/item"
+  end
+end
+</blockquote>
+      </pre>
+    </section>
+    <section>
+      <h2>Alternatives</h2>
+      <ul>
+        <li>JSONify</li>
+        <li>Jbuilder</li>
+        <li>RepresentationView</li>
+        <li>Active Model Serializers</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Advantages</h2>
+      <ul>
+        <li>A single place to check your api format</li>
+        <li>Tidies up your controllers</li>
+        <li>Stops 'munging' of data in controllers</li>
+        <li>Quick api specific changes.</li>
+      </ul>
+    </section>  
+
+    <section>
+      <h2>Questions?</h2>
+      <h2>@atleastimtrying</h2>
+      <img src='images/gordon.jpg'>
+    </section>
+  </body>
+</html>
